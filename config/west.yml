@@ -1,0 +1,15 @@
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+  projects:
+    - name: zmk
+      remote: zmkfirmware
+      revision: 4a27eb8f7e7674288de37c1c4f7f04a783c81a9d
+      import: app/west.yml
+    - name: ps2-driver-kim
+      url: https://github.com/infused-kim/kb_zmk_ps2_mouse_trackpoint_driver
+      path: modules/ps2-kim
+      revision: main
+  self:
+    path: config
