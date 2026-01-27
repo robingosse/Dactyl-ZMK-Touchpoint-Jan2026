@@ -1,0 +1,63 @@
+/* dac_man_5x6_left.overlay */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/nrf-pinctrl.h>
+#include "dac_man_5x6.dtsi"
+
+&kscan {
+    status = "okay";
+    diode-direction = "row2col";
+
+    col-gpios =
+        <&gpio1 4  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+        <&gpio1 11 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+        <&gpio1 0  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+        <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+        <&gpio0 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+        <&gpio0 17 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+
+    row-gpios =
+        <&gpio0 31 GPIO_ACTIVE_LOW>,
+        <&gpio0 29 GPIO_ACTIVE_LOW>,
+        <&gpio0 2  GPIO_ACTIVE_LOW>,
+        <&gpio1 15 GPIO_ACTIVE_LOW>,
+        <&gpio1 13 GPIO_ACTIVE_LOW>;
+};
+
+&default_transform {
+    col-offset = <0>;
+};
+
+&pinctrl {
+    dacman_uart1_default: dacman_uart1_default {
+        group1 {
+            psels =
+                <NRF_PSEL(UART_TX, 0, 8)>,
+                <NRF_PSEL(UART_RX, 0, 6)>;
+        };
+    };
+
+    dacman_uart1_sleep: dacman_uart1_sleep {
+        group1 {
+            psels =
+                <NRF_PSEL(UART_TX, 0, 8)>,
+                <NRF_PSEL(UART_RX, 0, 6)>;
+            low-power-enable;
+        };
+    };
+};
+
+&uart1 {
+    status = "okay";
+    current-speed = <115200>;
+    pinctrl-0 = <&dacman_uart1_default>;
+    pinctrl-1 = <&dacman_uart1_sleep>;
+    pinctrl-names = "default", "sleep";
+};
+
+ / {
+    wired_split {
+        compatible = "zmk,wired-split";
+        device = <&uart1>;
+    };
+};
